@@ -59,7 +59,7 @@ variable "EKSVpcCniAddOnVersion" {
 variable "EKSCoreDnsAddOnVersion" {
   type = string
   description = "EKS Core DNS Addon Version"
-  default = "v1.11.1-eksbuild.9"
+  default = "v1.11.1-eksbuild.4"
   
 }
 
@@ -73,7 +73,7 @@ variable "EKSVersion" {
 variable "NodeInstanceType" {
   type = string
   description = "EC2 WorkerNode Type"
-  default = "t2.medium"
+  default = "t3.medium"
 }
 
 variable "EBSVolumeSize" {
@@ -106,7 +106,6 @@ variable "EKSClusterName" {
 variable "AMIId" {
   type = string
   description = "Nodes AMI"
-  default = "ami-0b6c374ba4ea637cc"
-  
+  default = "ami-0e87fae068ae8d4e0"
 }
 

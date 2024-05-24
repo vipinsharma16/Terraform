@@ -5,7 +5,7 @@ resource "aws_vpc" "bmt-rat-eks-VPC" {
   enable_dns_support = "true"   #gives you an internal host name
 
   tags = {
-    Name = "bmt-rat-eks-VPC"
+    Name = "${var.EKSClusterName}-VPC"
   }
 }
 
@@ -18,7 +18,7 @@ resource "aws_subnet" "PublicSubnet01" {
   availability_zone = "${data.aws_availability_zones.available.names[0]}"
 
     tags = {
-        Name                     = "bmt-rat-eks-PublicSubnet01"
+        Name = "${var.EKSClusterName}-PublicSubnet01"
         "kubernetes.io/role/elb" = "1"
     }
 }
@@ -30,7 +30,7 @@ resource "aws_subnet" "PublicSubnet02" {
   availability_zone = "${data.aws_availability_zones.available.names[1]}"
 
     tags = {
-        Name                     = "bmt-rat-eks-PublicSubnet02"
+        Name = "${var.EKSClusterName}-PublicSubnet02"
         "kubernetes.io/role/elb" = "1"
     }
 }
@@ -41,8 +41,8 @@ resource "aws_subnet" "PrivateSubnet01" {
   availability_zone = "${data.aws_availability_zones.available.names[0]}"
 
     tags = {
-        Name                     = "bmt-rat-eks-PrivateSubnet01"
-        "kubernetes.io/role/elb" = "1"
+        Name = "${var.EKSClusterName}-PrivateSubnet01"
+        "kubernetes.io/role/internal-elb" = "1"
     }
 }
 
@@ -52,8 +52,8 @@ resource "aws_subnet" "PrivateSubnet02" {
   availability_zone = "${data.aws_availability_zones.available.names[1]}"
 
     tags = {
-        Name                     = "bmt-rat-eks-PrivateSubnet02"
-        "kubernetes.io/role/elb" = "1"
+        Name  = "${var.EKSClusterName}-PrivateSubnet02"
+        "kubernetes.io/role/internal-elb" = "1"
     }
 }
 
@@ -61,7 +61,7 @@ resource "aws_internet_gateway" "bmt-rat-igw" {
   vpc_id = aws_vpc.bmt-rat-eks-VPC.id
 
   tags = {
-    Name = "bmt-rat-eks-igw"
+    Name = "${var.EKSClusterName}-igw"
   }
 }
 
@@ -171,15 +171,24 @@ resource "aws_security_group" "ControlPlaneSecurityGroup" {
   description = "Cluster communication with worker nodes"
   vpc_id      = aws_vpc.bmt-rat-eks-VPC.id
 
- ingress {
+    
+   ingress {
       description = "allow"
       protocol = "-1"
       self = true
       from_port = 0
       to_port = 0
    }
+
    tags = {
-     Name = "bmt-rat-eks-ControlPlaneSecurityGroup"
+      Name = "${var.EKSClusterName}-ControlPlaneSecurityGroup"
    }
+}
+
+resource "aws_vpc_security_group_egress_rule" "outbond_rule" {
+  security_group_id = aws_security_group.ControlPlaneSecurityGroup.id
+  cidr_ipv4         = "0.0.0.0/0"
+  ip_protocol       = "-1" # semantically equivalent to all ports
+  description = "allow to all"
 }
 

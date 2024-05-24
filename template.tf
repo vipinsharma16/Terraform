@@ -2,7 +2,9 @@ resource "aws_launch_template" "EKSWorkerNodeLaunchTemplateCiscoAMI" {
     depends_on = [ aws_eks_cluster.bmt-rat-eks ]
     image_id                             = var.AMIId
     instance_type                        = var.NodeInstanceType
-    name                                 = "EKSWorkerNodeLaunchTemplateCiscoAMI"
+    name                                 = "${var.EKSClusterName}-node-launch-template"
+    key_name = "eks-key"
+
     block_device_mappings {
         device_name  = "/dev/xvda"
         ebs {
@@ -20,6 +22,10 @@ resource "aws_launch_template" "EKSWorkerNodeLaunchTemplateCiscoAMI" {
     metadata_options {
         http_put_response_hop_limit = 2
     }
+
+    lifecycle {
+    create_before_destroy = true
+  }
     
-    user_data = filebase64("${path.module}/template.sh")
+    user_data = base64encode(local.eks-node-private-userdata)
 }

@@ -58,6 +58,14 @@ resource "aws_eks_cluster" "bmt-rat-eks" {
   role_arn = aws_iam_role.bmtRatEKSClusterRole.arn
   version = var.EKSVersion
 
+    enabled_cluster_log_types = [
+    "api",
+    "audit",
+    "authenticator",
+    "controllerManager",
+    "scheduler",
+  ]
+
   vpc_config {
     endpoint_private_access   = false
     endpoint_public_access    = true
@@ -70,6 +78,7 @@ resource "aws_eks_cluster" "bmt-rat-eks" {
         ]
   }
 }
+
 output "endpoint" {
   value = aws_eks_cluster.bmt-rat-eks.endpoint
 }
@@ -78,13 +87,17 @@ output "kubeconfig-certificate-authority-data" {
   value = aws_eks_cluster.bmt-rat-eks.certificate_authority[0].data
 }
 
-#resource "aws_eks_addon" "coredns" {
-#   addon_name               = "coredns"
-#    addon_version            = var.EKSCoreDnsAddOnVersion
-#    cluster_name             = "bmt-rat-eks"
-#    resolve_conflicts_on_create = "OVERWRITE"
-#    depends_on = [aws_eks_cluster.bmt-rat-eks]
-#}
+output "identity-oidc-issuer" {
+  value = aws_eks_cluster.bmt-rat-eks.identity[0].oidc[0].issuer
+}
+
+resource "aws_eks_addon" "coredns" {
+   addon_name               = "coredns"
+    addon_version            = var.EKSCoreDnsAddOnVersion
+    cluster_name             = "bmt-rat-eks"
+    resolve_conflicts_on_create = "OVERWRITE"
+    depends_on = [aws_eks_cluster.bmt-rat-eks]
+}
 
 resource "aws_eks_addon" "kube-proxy" {
     addon_name               = "kube-proxy"

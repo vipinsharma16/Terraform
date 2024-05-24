@@ -17,8 +17,13 @@ resource "aws_eks_node_group" "EKSNodegroup1" {
     max_size     = 1
     min_size     = 1
   }
-
+  
   depends_on = [aws_launch_template.EKSWorkerNodeLaunchTemplateCiscoAMI]
+
+    tags = {
+    key = "kubernetes.io/cluster/bmt-rat-eks"
+    value = "owned"
+  }
 }
 
 resource "aws_eks_node_group" "EKSNodegroup2" {
@@ -43,4 +48,9 @@ resource "aws_eks_node_group" "EKSNodegroup2" {
   }
 
   depends_on = [aws_eks_node_group.EKSNodegroup1]
+
+  tags = {
+    key = "kubernetes.io/cluster/bmt-rat-eks"
+    value = "owned"
+  }
 }
