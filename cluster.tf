@@ -58,13 +58,13 @@ resource "aws_eks_cluster" "bmt-rat-eks" {
   role_arn = aws_iam_role.bmtRatEKSClusterRole.arn
   version = var.EKSVersion
 
-    enabled_cluster_log_types = [
-    "api",
-    "audit",
-    "authenticator",
-    "controllerManager",
-    "scheduler",
-  ]
+#    enabled_cluster_log_types = [
+#    "api",
+#    "audit",
+#    "authenticator",
+#    "controllerManager",
+#    "scheduler",
+#  ]
 
   vpc_config {
     endpoint_private_access   = false
@@ -75,7 +75,7 @@ resource "aws_eks_cluster" "bmt-rat-eks" {
         aws_subnet.PublicSubnet02.id, 
         aws_subnet.PrivateSubnet01.id, 
         aws_subnet.PrivateSubnet02.id
-        ]
+    ]
   }
 }
 
@@ -92,7 +92,7 @@ output "identity-oidc-issuer" {
 }
 
 resource "aws_eks_addon" "coredns" {
-   addon_name               = "coredns"
+    addon_name               = "coredns"
     addon_version            = var.EKSCoreDnsAddOnVersion
     cluster_name             = "bmt-rat-eks"
     resolve_conflicts_on_create = "OVERWRITE"
