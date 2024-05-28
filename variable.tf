@@ -133,7 +133,3 @@ variable "LambdaFunctionName" {
   default = "JHLambdaLogsToS3"
 }
 
-variable "bus_name" {
-  type = string
-  default = "default"
-}
