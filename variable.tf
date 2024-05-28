@@ -112,5 +112,28 @@ variable "AMIId" {
 variable "S3BucketName"{
   type = string
   description = "Bucket Name"
-  default = "s3logsforbmtrat-stg"
+  default = "s3logsforbmtrat-testing"
+}
+
+variable "LogRoleName" {
+  type = string
+  description = "lambda function role"
+  default = "MyLambdaRoleLogs"
+}
+
+variable "LogGroupName" {
+  type = string
+  description = "Log group name"
+  default = "/aws/containerinsights/bmt-rat-eks/application"
+}
+
+variable "LambdaFunctionName" {
+  type = string
+  description = "Lambda Function Name"
+  default = "JHLambdaLogsToS3"
+}
+
+variable "bus_name" {
+  type = string
+  default = "default"
 }
