@@ -109,3 +109,8 @@ variable "AMIId" {
   default = "ami-0e87fae068ae8d4e0"
 }
 
+variable "S3BucketName"{
+  type = string
+  description = "Bucket Name"
+  default = "s3logsforbmtrat-stg"
+}
